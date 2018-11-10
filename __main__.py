@@ -3,18 +3,21 @@ from .classifier import NaiveBayes
 from .util import Sentiments, getNgramTokens
 from .trainingset import TrainingSet
 from .test import CVTest
+from .stemmer import PorterStemmer
 
 base_dir = './data/tokenized'
-positives = [f for f in glob.glob("{}/{}/*.tag".format(base_dir, 'POS'))]
-negatives = [f for f in glob.glob("{}/{}/*.tag".format(base_dir, 'NEG'))]
+data = dict()
+for s in Sentiments:
+    data[s] = [f for f in glob.glob("{}/{}/*.tag".format(base_dir, s.name))]
+    data[s].sort()
+    
+p = PorterStemmer()
 
-positives.sort()
-negatives.sort()
+stemmer = lambda tokens: list(p.stem(word, 0, len(word)-1).lower() for word in tokens)
+nonstemmer = lambda tokens: tokens
 
-
-# test = CVTest(NaiveBayes, 2, lambda x: x, {'l': 0.8})
-test = CVTest(NaiveBayes, 2, lambda x: x, {'l': 0.7})
-results = test.test(positives, negatives)
+test = CVTest(3, NaiveBayes, stemmer, [2])
+results = test.test(data)
 
 s = 0
 for test, actual in results:

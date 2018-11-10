@@ -14,16 +14,10 @@ def getNgramTokens(n, tokens):
 
 
 class BagOfWords(object):
-    """
-    n-gram bag of words.
-    self.probs contains the joint probability P(x_i, ... , x_i-n | c)
-    """
-
     def __init__(self, n):
         self.n = n
         self.tokenMap = dict()
         self.sentimentCount = dict([(s, 0) for s in Sentiments])
-        self.prob = None
 
     def getSentimentCount(self, sentiment):
         return self.sentimentCount[sentiment]
@@ -38,19 +32,31 @@ class BagOfWords(object):
         for token in getNgramTokens(self.n, tokens):
             self.addToken(sentiment, token) 
 
-    def getTokenMap(self):
-        return self.tokenMap
-
     def getTokenCount(self, token, sentiment):
         if token in self.tokenMap:
             return self.tokenMap[token][sentiment]
         else:
             return 1
 
-#     def getProb(self): 
-#         if not self.prob:
-#             self.prob = dict((k, dict((s, v[s] / self.getSentimentCount(s)) for s in Sentiments)) for k, v in self.tokenMap.items())
-#         return self.prob
-# 
-#     def defaultProb(self, s):
-#         return 1 / self.getSentimentCount(s)
+class BagOfPresence(object):
+    def __init__(self, n):
+        self.n = n
+        self.tokenMap = dict((s, set()) for s in Sentiments)
+
+    def getSentimentCount(self, sentiment):
+        return len(self.tokenMap[sentiment])
+
+    def addToken(self, sentiment, token):
+        self.tokenMap[sentiment].add(token)
+
+    def addTokens(self, sentiment, tokens): 
+        for token in getNgramTokens(self.n, tokens):
+            self.addToken(sentiment, token) 
+
+    def getTokenCount(self, token, sentiment):
+        if token in self.tokenMap[sentiment]:
+            return 1
+        else:
+            return 0
+
+
