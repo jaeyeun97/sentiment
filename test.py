@@ -2,9 +2,10 @@ from .util import Sentiments
 from .trainingset import TrainingSet
 
 class CVTest(object):
-    def __init__(self, fold, classifierClass, preprocessor, grams=[1]): 
+    def __init__(self, fold, BagClass, ClassifierClass, preprocessor, grams={1}): 
         self.fold = 3 
-        self.classifierClass = classifierClass
+        self.BagClass = BagClass
+        self.ClassifierClass = ClassifierClass
         self.preprocessor = preprocessor
         self.grams = grams
 
@@ -12,7 +13,7 @@ class CVTest(object):
         results = list()
         for i in range(self.fold):
             print("Train {}: ".format(i+1), end='')
-            trainingSet = TrainingSet(self.grams)
+            trainingSet = TrainingSet(self.BagClass, self.grams)
             testingData = list()
             
             for s in Sentiments:
@@ -54,4 +55,4 @@ class CVTest(object):
             trainingSet.add(sentiment, tokens)
 
     def getClassifer(self, ts):
-        return self.classifierClass(ts) 
+        return self.ClassifierClass(ts) 

@@ -1,7 +1,6 @@
 import glob
-from .classifier import NaiveBayes
-from .util import Sentiments, getNgramTokens
-from .trainingset import TrainingSet
+from .classifier import NaiveBayes, SVM
+from .util import Sentiments, BagOfWords, BagOfPresence
 from .test import CVTest
 from .stemmer import PorterStemmer
 
@@ -16,7 +15,7 @@ p = PorterStemmer()
 stemmer = lambda tokens: list(p.stem(word, 0, len(word)-1).lower() for word in tokens)
 nonstemmer = lambda tokens: tokens
 
-test = CVTest(3, NaiveBayes, stemmer, [2])
+test = CVTest(3, BagOfWords, SVM, stemmer, {1, 2})
 results = test.test(data)
 
 s = 0

@@ -1,18 +1,15 @@
-from .util import Sentiments, BagOfWords
+from .util import Sentiments
 
 class TrainingSet(object):
-    def __init__(self, grams):
+    def __init__(self, BagClass, grams):
         self.sentimentCount = dict((s, 0) for s in Sentiments)
-        self.bows = list()
+        self.BagClass = BagClass
         self.grams = grams
+        self.bags = list() 
         self.computed = False
 
-        for n in grams:
-            self.bows.append(BagOfWords(n))
-
     def add(self, sentiment, tokens):
-        for bow in self.bows:
-            bow.addTokens(sentiment, tokens)
+        self.bags.append(self.BagClass(self.grams, tokens, sentiment))  
         self.sentimentCount[sentiment] += 1
 
     def getClassProb(self, sentiment):
