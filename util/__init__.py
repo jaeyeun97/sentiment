@@ -1,2 +1,2 @@
-from .bow import BagOfWords, getNgramTokens, BagOfPresence
+from .bag import BagOfWords, getNgramTokens, BagOfPresence
 from .sentiments import Sentiments

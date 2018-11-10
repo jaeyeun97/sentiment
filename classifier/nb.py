@@ -7,14 +7,13 @@ class NaiveBayes(object):
         self.trainingSet = trainingSet 
         self.count = dict((s, 0) for s in Sentiments) 
         self.tokenMap = dict((s, dict()) for s in Sentiments)
-        self.grams = set()
+        self.grams = trainingSet.grams
 
         for bag in trainingSet.bags:
-            self.grams.update(bag.grams)
             for t in bag.tokenMap:
                 if t not in self.tokenMap[bag.sentiment]:
                     self.tokenMap[bag.sentiment][t] = 0
-                self.tokenMap[bag.sentiment][t] = bag.add(self.tokenMap[bag.sentiment][t], t)
+                self.tokenMap[bag.sentiment][t] += bag.getTokenCount(t)
     
         for s, v in self.tokenMap.items():
             for t, n in v.items():
@@ -28,12 +27,12 @@ class NaiveBayes(object):
 
     def calculate(self, tokens): 
         prob = dict((s, np.log(self.trainingSet.getClassProb(s))) for s in Sentiments)
-        for i in self.grams:
-            ts = getNgramTokens(i, tokens)
-            for s in Sentiments:
-                count = np.log(self.count[s] + len(ts))
-                for t in ts:
-                    prob[s] += np.log(self.getTokenCount(s, t) + 1) - count
+        evalMap = self.trainingSet.BagClass.generateTokenMap(self.grams, tokens)
+
+        for s in Sentiments:
+            count = np.log(self.count[s] + sum(evalMap.values()))
+            for t, cnt in evalMap.items():
+                prob[s] += cnt * (np.log(self.getTokenCount(s, t) + 1) - count)
         return prob
         
     def classify(self, tokens):
