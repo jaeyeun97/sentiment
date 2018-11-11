@@ -21,8 +21,11 @@ class SVM(object):
         self.classifier = SVC(kernel='linear', gamma='auto')
         self.classifier.fit(X, y)
 
-    def classify(self, tokens):
-        tokenMap = self.trainingSet.BagClass.generateTokenMap(self.trainingSet.grams, tokens)
-        X = self.vectorizer.transform(tokenMap) 
-        y = self.classifier.predict(X)
-        return Sentiments(y[0])
+    def classify(self, tokensList):
+        tokenMaps = list(self.trainingSet.BagClass.generateTokenMap(self.trainingSet.grams, ts) for ts in tokensList)
+        X = self.vectorizer.transform(tokenMaps)
+        ys = self.classifier.predict(X)
+        return [Sentiments(y) for y in ys]
+
+    def __str__(self):
+        return "SVM"

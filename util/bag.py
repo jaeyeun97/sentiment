@@ -31,6 +31,9 @@ class BagOfWords(object):
     def getTokenCount(self, t):
         return self.tokenMap[t]
 
+    def __str__(self):
+        return "Bag of Words"
+
 
 class BagOfPresence(object):
     def __init__(self, grams, tokens, sentiment):
@@ -52,3 +55,6 @@ class BagOfPresence(object):
 
     def getTokenCount(self, t):
         return 1 if t in self.tokenMap else 0
+    
+    def __str__(self):
+        return "Bag of Presence"

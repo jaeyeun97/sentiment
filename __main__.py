@@ -1,7 +1,7 @@
 import glob
 from .classifier import NaiveBayes, SVM
 from .util import Sentiments, BagOfWords, BagOfPresence
-from .test import CVTest
+from .test import CV
 from .stemmer import PorterStemmer
 
 base_dir = './data/tokenized'
@@ -12,15 +12,16 @@ for s in Sentiments:
     
 p = PorterStemmer()
 
-stemmer = lambda tokens: list(p.stem(word, 0, len(word)-1).lower() for word in tokens)
-nonstemmer = lambda tokens: tokens
+def porter(tokens):
+    return list(p.stem(word, 0, len(word)-1).lower() for word in tokens)
 
-test = CVTest(3, BagOfPresence, NaiveBayes, stemmer, {1, 2})
-results = test.test(data)
+def nonstemmer(tokens):
+    return tokens
 
-s = 0
-for test, actual in results:
-    if test == actual: 
-        s += 1
-print(s / len(results))
+stemmers = [nonstemmer, porter]
+gramLevels = [{1}, {1,2}, {2}]
+bagClasses = [BagOfWords, BagOfPresence]
+classifierClasses = [NaiveBayes, SVM]
 
+cv = CV(3, stemmers, gramLevels, bagClasses, classifierClasses)
+cv.exec(data)

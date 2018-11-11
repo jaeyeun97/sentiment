@@ -35,6 +35,12 @@ class NaiveBayes(object):
                 prob[s] += cnt * (np.log(self.getTokenCount(s, t) + 1) - count)
         return prob
         
-    def classify(self, tokens):
-        probs = self.calculate(tokens)
-        return max(probs.keys(), key=lambda key: probs[key])
+    def classify(self, tokenslist):
+        results = list()
+        for tokens in tokenslist:
+            probs = self.calculate(tokens)
+            results.append(max(probs.keys(), key=lambda key: probs[key]))
+        return results
+
+    def __str__(self):
+        return "Naive Bayes"
