@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import binom
 from scipy.special import comb
 from ..util import Sentiments
 from .classifier import Classifier
@@ -50,7 +51,7 @@ class CV(object):
                 trainX.extend(X1)
                 trainY.extend([s]*len(X1))
                 testX.extend(X2)
-                testY.extend([s]*len(testX))
+                testY.extend([s]*len(X2))
             self.actual.extend(testY)               
             
             def getResults(s, g, B, C): 
@@ -70,7 +71,7 @@ class CV(object):
 
     def getAccuracies(self):
         def getAccuracy(s, g, B, C):
-            self.accuracies[s][g][B][C] = self.calculateAccuracy(zip(self.results[s][g][B][C], self.actual))
+            self.accuracies[s][g][B][C] = self.calculateAccuracy(list(zip(self.results[s][g][B][C], self.actual)))
         self.forEach(getAccuracy)
 
     def printAccuracies(self):
@@ -113,12 +114,11 @@ class CV(object):
 
         N = 2 * np.ceil(null/2) + plus + minus
         k = np.ceil(null/2) + np.minimum(plus, minus)
-        i = np.arange(k+1)
         q = 0.5
-        return 2 * np.sum(comb(N, i, exact=True) * np.power(q, i) * np.power(1-q, N - i))
+        # return np.prod([2, np.sum(np.prod([comb(N, i, exact=True), np.power(q, i), np.power(1-q, N - i)]) for i in np.arange(k+1))])
+        return 2 * binom.cdf(k, N, q)
 
-    @staticmethod
-    def stringify(s, g, B, C, x):
+    def stringify(self, s, g, B, C, x):
         return "{} {} {} {} {} ".format(str(s), str(self.gramLevels[g]), str(B), str(C), x)
 
     @staticmethod
@@ -138,5 +138,5 @@ class CV(object):
         for test, actual in results:
             if test == actual: 
                 s += 1
-        print(s / len(results))
+        return s / len(results)
 
