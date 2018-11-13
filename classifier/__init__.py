@@ -1,2 +1,2 @@
-from .nb import NaiveBayes
+from .nb import NB
 from .svm import SVM

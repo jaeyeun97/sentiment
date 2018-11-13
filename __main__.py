@@ -1,5 +1,5 @@
 import glob
-from .classifier import NaiveBayes, SVM
+from .classifier import NB, SVM
 from .util import Sentiments, BagOfFrequency, BagOfPresence
 from .test import CV
 from .stemmer import PorterStemmer
@@ -9,7 +9,7 @@ data = dict()
 for s in Sentiments:
     data[s] = [f for f in glob.glob("{}/{}/*.tag".format(base_dir, s.name))]
     data[s].sort()
-    
+ 
 p = PorterStemmer()
 
 def porter(tokens):
@@ -21,7 +21,7 @@ def nostem(tokens):
 stemmers = [nostem, porter]
 gramLevels = [{1}, {1,2}, {2}]
 bagClasses = [BagOfFrequency, BagOfPresence]
-classifierClasses = [NaiveBayes, SVM]
+classifierClasses = [NB, SVM]
 cutoffs = [0, 3]
 
 cv = CV(3, stemmers, gramLevels, bagClasses, classifierClasses, cutoffs)

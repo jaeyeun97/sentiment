@@ -2,7 +2,7 @@ import numpy as np
 import glob
 from ..util import Sentiments, getNgramTokens
 
-class NaiveBayes(object):
+class NB(object):
     def __init__(self, trainingSet):
         self.trainingSet = trainingSet 
         self.count = dict((s, 0) for s in Sentiments) 
