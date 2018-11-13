@@ -10,11 +10,11 @@ class NaiveBayes(object):
         self.grams = trainingSet.grams
 
         for bag in trainingSet.bags:
-            for t in bag.tokenMap:
+            for t in trainingSet.getFeatures():
                 if t not in self.tokenMap[bag.sentiment]:
                     self.tokenMap[bag.sentiment][t] = 0
                 self.tokenMap[bag.sentiment][t] += bag.getTokenCount(t)
-    
+ 
         for s, v in self.tokenMap.items():
             for t, n in v.items():
                 self.count[s] += n
@@ -41,6 +41,3 @@ class NaiveBayes(object):
             probs = self.calculate(tokens)
             results.append(max(probs.keys(), key=lambda key: probs[key]))
         return results
-
-    def __str__(self):
-        return "Naive Bayes"

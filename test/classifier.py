@@ -2,16 +2,17 @@ from ..util import Sentiments
 from ..trainingset import TrainingSet
 
 class Classifier(object):
-    def __init__(self, BagClass, ClassifierClass, preprocessor, grams={1}): 
+    def __init__(self, BagClass, ClassifierClass, preprocessor, grams={1}, cutoff=0): 
         self.BagClass = BagClass
         self.ClassifierClass = ClassifierClass
         self.preprocessor = preprocessor
         self.grams = grams
         self.classifier = None
+        self.cutoff = cutoff
 
     def train(self, trainX, trainY):  
         assert len(trainX) == len(trainY)
-        trainingSet = TrainingSet(self.BagClass, self.grams)
+        trainingSet = TrainingSet(self.BagClass, self.grams, self.cutoff)
         for i in range(len(trainX)):
             self.addFile(trainingSet, trainY[i], trainX[i])
         self.classifier = self.getClassifer(trainingSet)

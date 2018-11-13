@@ -8,15 +8,16 @@ class SVM(object):
         self.trainingSet = trainingSet
         self.rlookup = dict()
 
-        features = list()
-        classes = list()
+        X_data = list()
+        y_data = list()
+
         for bag in trainingSet.bags:
-            features.append(dict((t, bag.getTokenCount(t)) for t in bag.tokenMap))
-            classes.append(bag.sentiment.value)
+            X_data.append({t: bag.getTokenCount(t) for t in trainingSet.getFeatures()})
+            y_data.append(bag.sentiment.value)
 
         self.vectorizer = DictVectorizer(sparse=True, dtype=int)
-        X = self.vectorizer.fit_transform(features)
-        y = np.array(classes)
+        X = self.vectorizer.fit_transform(X_data)
+        y = np.array(y_data)
 
         self.classifier = SVC(kernel='linear', gamma='auto')
         self.classifier.fit(X, y)

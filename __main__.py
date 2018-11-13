@@ -1,6 +1,6 @@
 import glob
 from .classifier import NaiveBayes, SVM
-from .util import Sentiments, BagOfWords, BagOfPresence
+from .util import Sentiments, BagOfFrequency, BagOfPresence
 from .test import CV
 from .stemmer import PorterStemmer
 
@@ -15,13 +15,14 @@ p = PorterStemmer()
 def porter(tokens):
     return list(p.stem(word, 0, len(word)-1).lower() for word in tokens)
 
-def nonstemmer(tokens):
+def nostem(tokens):
     return tokens
 
-stemmers = [nonstemmer, porter]
+stemmers = [nostem, porter]
 gramLevels = [{1}, {1,2}, {2}]
-bagClasses = [BagOfWords, BagOfPresence]
+bagClasses = [BagOfFrequency, BagOfPresence]
 classifierClasses = [NaiveBayes, SVM]
+cutoffs = [0, 3]
 
-cv = CV(3, stemmers, gramLevels, bagClasses, classifierClasses)
+cv = CV(3, stemmers, gramLevels, bagClasses, classifierClasses, cutoffs)
 cv.exec(data)

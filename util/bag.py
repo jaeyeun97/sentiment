@@ -12,7 +12,7 @@ def getNgramTokens(n, tokens):
     return list(zip(*l))
 
 
-class BagOfWords(object):
+class BagOfFrequency(object):
     def __init__(self, grams, tokens, sentiment):
         self.grams = grams
         self.sentiment = sentiment
@@ -29,10 +29,7 @@ class BagOfWords(object):
         return tokenMap
 
     def getTokenCount(self, t):
-        return self.tokenMap[t]
-
-    def __str__(self):
-        return "Bag of Words"
+        return self.tokenMap[t] if t in self.tokenMap else 0
 
 
 class BagOfPresence(object):
@@ -54,7 +51,4 @@ class BagOfPresence(object):
         return dict((token, 1) for token in BagOfPresence.generateTokenSet(grams, tokens))
 
     def getTokenCount(self, t):
-        return 1 if t in self.tokenMap else 0
-    
-    def __str__(self):
-        return "Bag of Presence"
+        return 1 if t in self.tokenMap else 0 
