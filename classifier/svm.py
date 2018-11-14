@@ -13,7 +13,7 @@ class SVM(object):
         features = trainingSet.getFeatures()
 
         for bag in trainingSet.bags:
-            X_data.append(dict((t, bag.getTokenCount(t)) for t in features))
+            X_data.append({t: bag.getTokenCount(t) for t in bag.tokenMap})
             y_data.append(bag.sentiment.value)
 
         self.vectorizer = DictVectorizer(sparse=True, dtype=int)

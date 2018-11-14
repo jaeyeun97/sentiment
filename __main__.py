@@ -1,7 +1,7 @@
 import glob
 from .classifier import NB, SVM
 from .util import Sentiments, BagOfFrequency, BagOfPresence
-from .test import CV
+from .test import CV, Classifier
 from .stemmer import PorterStemmer
 
 base_dir = './data/tokenized'
@@ -26,3 +26,16 @@ cutoffs = [0, 3]
 
 cv = CV(3, stemmers, gramLevels, bagClasses, classifierClasses, cutoffs)
 cv.exec(data)
+
+# trainX = list()
+# trainY = list()
+# testX = list()
+# testY = list()
+# for s in Sentiments:
+#     trainX.extend(data[s][:666])
+#     testX.extend(data[s][666:])
+#     trainY.extend([s]*666)
+#     testY.extend([s]*334)
+# classifier = Classifier(BagOfFrequency, SVM, porter, {1,2}, 0)
+# classifier.train(trainX, trainY)
+# classifier.test(testX)

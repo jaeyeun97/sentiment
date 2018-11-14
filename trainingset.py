@@ -21,8 +21,7 @@ class TrainingSet(object):
 
     def getFeatures(self):
         if self.features is None:
-            self.features = list(t for t, v in self.totalTokenCount.items() if v >= self.cutoff)
-            del self.totalTokenCount
+            self.features = set(t for t, v in self.totalTokenCount.items() if v >= self.cutoff)
         return self.features
 
     def getClassProb(self, sentiment):

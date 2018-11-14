@@ -12,21 +12,16 @@ class CV(object):
         self.cutoffs = cutoffs
 
         self.results = dict()
-        self.accuracies = dict()
         self.actual = list()
 
         for s in stemmers:
             self.results[s] = dict()
-            self.accuracies[s] = dict()
             for g in range(len(gramLevels)):
                 self.results[s][g] = dict()
-                self.accuracies[s][g] = dict()
                 for B in bagClasses:
                     self.results[s][g][B] = dict()
-                    self.accuracies[s][g][B] = dict()
                     for C in classifierClasses:
                         self.results[s][g][B][C] = dict()
-                        self.accuracies[s][g][B][C] = dict()
                         for c in self.cutoffs:
                             self.results[s][g][B][C][c] = list()
 
@@ -58,6 +53,7 @@ class CV(object):
                 classifier.train(trainX, trainY) 
                 print("Test:\t{}".format(self.stringify(s, g, B, C, c))) 
                 self.results[s][g][B][C][c].extend(classifier.test(testX))
+                del classifier
             self.forEach(getResults)
 
     def exec(self, data):
@@ -76,12 +72,13 @@ class CV(object):
         print("Sign Test")
         test = SignTest(self.actual) 
         def getFirst(s1, g1, B1, C1, c1):
-            firstResult = self.result[s1][g1][B1][C1][c1]
+            firstResult = self.results[s1][g1][B1][C1][c1]
             def getSecond(s2, g2, B2, C2, c2):
-                secondResult = self.result[s2][g2][B2][C2][c2]
+                secondResult = self.results[s2][g2][B2][C2][c2]
                 result = test.test(firstResult, secondResult)
                 print("{}\t|\t{}:\t{}".format(self.stringify(s1, g1, B1, C1, c1), self.stringify(s2, g2, B2, C2, c2), result))
             self.forEach(getSecond)
+        self.forEach(getFirst)
  
     def stringify(self, s, g, B, C, c):
         return "{}\t{}\t{}\t{}\t{}".format(s.__name__, self.gramLevels[g], B.__name__, C.__name__, c)

@@ -29,7 +29,7 @@ class BagOfFrequency(object):
         return tokenMap
 
     def getTokenCount(self, t):
-        if t in self.tokenMap.keys():
+        if t in self.tokenMap:
             return self.tokenMap[t]
         else:
             return 0
