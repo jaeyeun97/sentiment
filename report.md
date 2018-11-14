@@ -30,7 +30,7 @@ header-includes:
 
 # Introduction
 
-For the first practical, document sentiment classification was revisited. Pang et al. describes multiple methods of classifying movie reviews; this domain is experimentally convenient, since there is a large dataset with classification taken by the review ratings. We have been given a similar dataset that has been tokenized for classification, in the context of the NLP course. 
+For the first practical, document sentiment classification was revisited. Pang et al. describes multiple methods of classifying movie reviews; this domain is experimentally convenient, since there is a large dataset with classification taken by the review ratings.[1] We have been given a similar dataset that has been tokenized for classification, in the context of the NLP course. 
 
 The original experiment used various supervised learning methods with multiple models of feature extraction, but without any validation of statistical significance test on different classification models. We aim to select sub-models that may yield a statistically different result, and evaluate their effectiveness. We, however, exclude Maximum Entropy (ME) model from the original experiment.
 
@@ -58,7 +58,7 @@ Unlike the original experiment, we will use the Porter Stemmer to preprocess the
 
 ### Feature Cutoff
 
-The original paper removes certain number of features by removing tokens that have occurred less than a given amount. The SVM classifier implements feature selection by default, which results in no difference between feature selected models and their originals. For the Naive Bayes classifiers, however, the results differ and is shown below with the sign test results.
+The original paper removes certain number of features by removing tokens that have occurred less than a given amount. The SVM classifier implements feature selection by default, which results in no difference between feature selected models and their originals. For the Naive Bayes classifiers, however, we have set the boundary to 3 occurrences, and the following result is below.
 
 # Evaluaton and Results
 
@@ -73,16 +73,23 @@ Stemming & 0.982 \\
 Unigram+Bigram & 0.789 \\
 Bigram & 0.011 \\
 SVM & 0.461 \\
-Occurances & 0.173 \\ \hline
+Occurances & 0.173 \\ 
+Feature Cutoff & 0.893 \\\hline
 \end{tabular}
 \end{center}
 \caption{Sign test results between baseline and individual change} \label{fig:sign}
 \end{figure}
 
-We assumed that each change are independent and chose a baseline classifier (Naive Bayes, no stemming, unigrams, and frequency based bag-of-words) to be compared pairwise to a set of models that has only one element changed. \ref{fig:sign} shows the `p-values` of each comparison, where higher `p-value` notes less significance in change (in favor of the null hypothesis).
+We chose a baseline classifier (Naive Bayes, no stemming, unigrams, and frequency based bag-of-words without feature cutoff) to be compared pairwise to a set of models that has only one element changed. Figure \ref{fig:sign} shows the `p-values` of each comparison, where higher `p-value` notes less significance in change (in favor of the null hypothesis).
+
+Note that the sign test results are not complete as we have not done for all pair. The results above assume that each treatment's efficacy is independent of each other; such can be investigated further with more detailed results.
 
 # Conclusion
 
 From the results of figures \ref{fig:acc} and \ref{fig:sign}, we cannot confidently assert that the null hypothesis was defeated for all models except for bigrams, since they are all below the confidence interval.
 
 The significant difference in the various $n$-gram model was anticipated as the feature vector yielded differs; bigram models have performed worse than unigram models, however, which can be the lack of each token in data affecting the results.
+
+# Reference
+
+[1] Pang, B., L. Lee, and S. Vaithyanathan. 2002. Thumbs up?: sentiment classification using machine learning techniques. In Proceedings of the ACL-02 conference on Empirical methods in natural language processing-Volume 10, 79–86. 
