@@ -1,6 +1,6 @@
 # Intro
 
-This repository contains an implementation of Naive Bayes classifier and multiple bag-of-words based feature extractions for replicating the results of Pang et al. 2002, for the NLP course at Cambridge.
+This repository contains an implementation of Naive Bayes classifier, utilization of `scikit-learn`'s SVM implementation and multiple bag-of-words based feature extractions for replicating the results of Pang et al. 2002, for the NLP course at Cambridge.
 
 I do realise this code is highly inefficient and has fairly straightforward changes that may improve the speed of the classifications significantly, but I had no problem just running it overnight while I sleep (and the purpose of this code is to get the results so whatever).
 
